@@ -285,6 +285,7 @@ class TitleScene extends Phaser.Scene {
                   */
                   this.nameBox.destroy();
                   document.getElementById("game").focus();
+                  
                   this.callback(myName, this.music, this.secret);
 
                   console.log("Preroll Ad Completed: " + evt);
@@ -296,7 +297,6 @@ class TitleScene extends Phaser.Scene {
             });
           } else {
             this.nameBox.destroy();
-
             this.callback(myName, this.music, this.secret);
           }
         } else {

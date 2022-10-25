@@ -82,6 +82,7 @@ class GameScene extends Phaser.Scene {
 				  } else {
 					config.volume = 0.5;
 				  }
+        
 
 				this.coin = this.sound.add("coin", config);
 				this.chestOpen = this.sound.add("chestOpen", config);
@@ -90,6 +91,21 @@ class GameScene extends Phaser.Scene {
 				this.hit = this.sound.add("hit", config);
 				this.winSound = this.sound.add("winSound", config);
 				this.loseSound = this.sound.add("loseSound", config);
+
+            try {
+              config.loop = true
+              config.volume /= 4
+      this.music = this.sound.add("openingsound", config);
+      this.music.play();
+
+              
+    } catch (e) {
+
+
+    }
+        config.loop = false
+
+      this.chestHit = this.sound.add("chestHit", config);
     
 				this.tps = 0;
 				//background
@@ -224,6 +240,7 @@ class GameScene extends Phaser.Scene {
 					this.chat.toggled = !this.chat.toggled;
           if(this.spectating) {
 			  if(this.deadText.visible) {
+          this.music.stop();
                        this.callback();
                     this.socket.disconnect();
           this.scene.start("title");
@@ -318,6 +335,8 @@ class GameScene extends Phaser.Scene {
 					this.chat.toggled = !this.chat.toggled;
           if(this.spectating) {
 			  if(this.deadText.visible) {
+          this.music.stop();
+          
                        this.callback();
                     this.socket.disconnect();
           this.scene.start("title");
@@ -432,7 +451,7 @@ class GameScene extends Phaser.Scene {
   }
 
 							this.deathRect.destroy();
-							this.deathRect = this.add.rectangle(this.canvas.width/2, this.canvas.height/2, this.canvas.width/2, this.canvas.height/1.5, 0x90EE90);
+							this.deathRect = this.add.rectangle(this.canvas.width/2, this.canvas.height/2, this.canvas.width/2, this.canvas.height/1.5, 0xFFA500);
               this.deadText.destroy();
 				this.deadText = this.add.text(this.canvas.width/2, (this.deathRect.y- (this.deathRect.height/2)), "You got stabbed", {fontFamily: "Arial", fontSize: "32px", color: "#000000"}).setOrigin(0.5);
 								this.deadText.setFontSize(Math.min(this.canvas.width/25,this.canvas.height/20));
@@ -451,6 +470,7 @@ class GameScene extends Phaser.Scene {
 							this.statsText.y += this.statsText.height;
 						this.playAgain.destroy();
                   this.playAgain = new ImgButton(this, 0,0, "playAgainBtn",()=>{
+                    this.music.stop()
                     this.callback();
                     this.socket.disconnect();
           this.scene.start("title");
@@ -595,7 +615,7 @@ class GameScene extends Phaser.Scene {
 				//boundary
 				this.graphics = this.add.graphics().setDepth(4);
 				var thickness = 5000;
-				this.graphics.lineStyle(thickness, 0x006400, 1);
+				this.graphics.lineStyle(thickness, 0x8B4000, 1);
 
 				this.graphics.strokeRoundedRect(-(map/2) - (thickness/ 2), -(map/2) - (thickness/ 2), map + thickness, map + thickness, 0 );
 
@@ -1353,6 +1373,8 @@ class GameScene extends Phaser.Scene {
 
 						this.streak = 0;
 					var txt = `[b][color=#e82a1f]Stabbed [/color][color=#0000FF]${enemy.playerObj.name}[/color][/b]`;
+            this.cameras.main.shake(500);
+              
 						}
 					var text = this.add.rexBBCodeText(this.canvas.width/2, this.canvas.height, txt).setOrigin(0.5).setAlpha(0).setFontSize(fontsize);
 					text.setData("index", this.killtxts.length);
@@ -1395,6 +1417,7 @@ class GameScene extends Phaser.Scene {
 					var player = this.enemies.find(enemyPlayer => enemyPlayer.id == playerId);
 					if(player && this.sys.game.loop.actualFps >= 30) {
 						var particles = this.add.particles("hitParticle");
+            this.cameras.main.shake(200);
 
 						var emitter = particles.createEmitter({
 							
@@ -1413,6 +1436,8 @@ class GameScene extends Phaser.Scene {
 				this.socket.on("takeHit", ([playerId, pPos]) => {
 					if(this.sys.game.loop.actualFps < 30) return;
 					this.damage.play();
+            this.cameras.main.shake(100);
+          
 					var particles = this.add.particles("hitParticle");
 
 					var emitter = particles.createEmitter({
@@ -1640,7 +1665,7 @@ class GameScene extends Phaser.Scene {
 					this.time.delayedCall(1500, () => {
 						
 						//show death screen
-						this.deathRect = this.add.rectangle(this.canvas.width/2, this.canvas.height/2, this.canvas.width/2, this.canvas.height/1.5, 0x90EE90).setAlpha(0);
+						this.deathRect = this.add.rectangle(this.canvas.width/2, this.canvas.height/2, this.canvas.width/2, this.canvas.height/1.5, 0xFFA500).setAlpha(0);
             this.cameras.main.ignore(this.deathRect);
 						this.tweens.add({
 							targets: this.deathRect,
@@ -1669,6 +1694,8 @@ class GameScene extends Phaser.Scene {
 
 
       this.playAgain = new ImgButton(this, 0,0, "playAgainBtn",()=>{
+          this.music.stop();
+        
         this.callback();
         this.socket.disconnect();
         
@@ -1714,6 +1741,10 @@ class GameScene extends Phaser.Scene {
 				this.socket.on("collected", ([coinId, playerId, coin]) => {
 					if(this.myObj && this.myObj.id == playerId) {
 						(coin?this.coin:this.chestOpen).play();
+            if(!coin) {
+
+              this.cameras.main.shake(100)
+            }
 					}
 					// eslint-disable-next-line semi
 					if(this.coins.find(coin => coin.id == coinId)) this.coins.find(coin => coin.id == coinId).state = {collected: true, collectedBy: playerId, time: 0}
