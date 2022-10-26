@@ -1373,7 +1373,6 @@ class GameScene extends Phaser.Scene {
 
 						this.streak = 0;
 					var txt = `[b][color=#e82a1f]Stabbed [/color][color=#0000FF]${enemy.playerObj.name}[/color][/b]`;
-            if(this.myObj && this.myObj.level > 5) this.cameras.main.shake((1/this.cameras.main.zoom)*150);
               
 						}
 					var text = this.add.rexBBCodeText(this.canvas.width/2, this.canvas.height, txt).setOrigin(0.5).setAlpha(0).setFontSize(fontsize);
@@ -1417,7 +1416,6 @@ class GameScene extends Phaser.Scene {
 					var player = this.enemies.find(enemyPlayer => enemyPlayer.id == playerId);
 					if(player && this.sys.game.loop.actualFps >= 30) {
 						var particles = this.add.particles("hitParticle");
-            if(this.myObj && this.myObj.level > 5) this.cameras.main.shake((1/this.cameras.main.zoom)*75);
 
 						var emitter = particles.createEmitter({
 							
@@ -1436,7 +1434,6 @@ class GameScene extends Phaser.Scene {
 				this.socket.on("takeHit", ([playerId, pPos]) => {
 					if(this.sys.game.loop.actualFps < 30) return;
 					this.damage.play();
-          if(this.myObj && this.myObj.level > 5)  this.cameras.main.shake((1/this.cameras.main.zoom)*38);
           
 					var particles = this.add.particles("hitParticle");
 
@@ -1741,10 +1738,6 @@ class GameScene extends Phaser.Scene {
 				this.socket.on("collected", ([coinId, playerId, coin]) => {
 					if(this.myObj && this.myObj.id == playerId) {
 						(coin?this.coin:this.chestOpen).play();
-            if(!coin) {
-
-            if(this.myObj && this.myObj.level > 5)  this.cameras.main.shake((1/this.cameras.main.zoom)*38)
-            }
 					}
 					// eslint-disable-next-line semi
 					if(this.coins.find(coin => coin.id == coinId)) this.coins.find(coin => coin.id == coinId).state = {collected: true, collectedBy: playerId, time: 0}
