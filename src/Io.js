@@ -9,6 +9,7 @@ import EventEmitter from "eventemitter3";
 class Socket extends EventEmitter  {
   constructor(ws) {
     super();
+    console.log("Attempting to connect to server...")
     this.socket = ws;
     this.connected = false;
     this.socket.onopen = () => {

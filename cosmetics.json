@@ -8,6 +8,14 @@
             "description": "The default skin"
         },
         {
+            "name": "pumpkin",
+            "displayName": "Pumpkin",
+            "url": "/assets/images/pumpkinPlayer.png",
+            "price": 0,
+            "original": 13000,
+            "description": "Very spooky...<br/>FREE, LIMITED TIME ONLY!"
+        },
+        {
             "name": "neon",
             "displayName": "Neon",
             "url": "/assets/images/neonPlayer.png",

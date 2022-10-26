@@ -255,7 +255,7 @@ function numberWithCommas(x) {
               <div class="card_image"><center><img src="<%= skin.url %>"></center></div>
               <div class="card_content">
                 <h2 class="card_title"><%= skin.displayName %><i class="fa-solid fa-circle-xmark"></i></h2>
-              <b>  <p class="card_text"><%= skin.description %></p></b>
+              <b>  <p class="card_text"><%- skin.description %></p></b>
                 <p class="card_text">
                   <% abbreviate_number = function(num, fixed) {
                     if (num === null) { return null; } // terminate early
@@ -281,7 +281,7 @@ function numberWithCommas(x) {
                 <%} else if(account.skins.collected.includes(skin.name.toLowerCase())) {%>
                   <button class="btn card_btn" skin="<%=skin.name%>" onclick="equip('<%=skin.name%>',this)"> EQUIP </button>
                   <% } else {%>
-                <button class="btn card_btn" skin="<%=skin.name%>" onclick="buy('<%=skin.name%>', '<%=skin.price%>',this)"> <%= numberWithCommas(skin.price) %> <img width="20" src="/assets/images/coin.png"></button>
+                <button class="btn card_btn" skin="<%=skin.name%>" onclick="buy('<%=skin.name%>', '<%=skin.price%>',this)"> <%- (skin.original ? '<s>'+numberWithCommas(skin.original)+'</s>' : "") %>  <b><%= numberWithCommas(skin.price) %></b> <img width="20" src="/assets/images/coin.png"></button>
               <% } %>
              
             
